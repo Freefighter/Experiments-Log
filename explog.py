@@ -46,8 +46,9 @@ def generateLog(config, result, save=None):
             
         output.write("\n\n")
         output.write("Saved Data:\n")
-        for var in save:
-            output.write("{}\n".format(retrieve_name_ex(var)))
+        if not save is None:
+            for var in save:
+                output.write("{}\n".format(retrieve_name_ex(var)))
         
     # print(filename)
     if not save is None:
