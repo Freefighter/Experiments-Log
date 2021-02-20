@@ -9,6 +9,9 @@ import pickle
 # 给每次实验取一个独特的id （时间+文件名）， 所有实验结果保存在该id的目录下。
 # 提前准备好要保存的数据于save变量中
 
+def getFileName():
+    return os.path.split(sys._getframe(1).f_code.co_filename)[-1]
+
 def retrieve_name_ex(var):
     frame = sys._getframe(2)    
     while(frame):        
@@ -22,17 +25,16 @@ def outputVar(var):
     print("{} = {}".format(retrieve_name_ex(var),var))
 
     
-def generateLog(config, result, save=None):
+def generateLog(config, result=None, save=None):
     # config 包括实验用的超参数 + 选用的模型名称，
     # result 包括loss结果 + runtime
     # save 包括需要存储的，更细一点的数据结果，比如每一轮的loss
     if not os.path.exists("log"):
         os.makedirs("log")
     
-    filename = "{}_{}".format(
-        os.path.split(__file__)[-1], str(datetime.datetime.now())
-        ).replace(' ', '_'
-        ).replace(':', '.')
+    rawname = os.path.split(sys._getframe(1).f_code.co_filename)[-1]
+    filename = "{}_{}".format(rawname, str(datetime.datetime.now())
+        ).replace(' ', '_').replace(':', '.')
         
     with open(os.path.join("log", filename + ".txt"), "w") as output:
         output.write("Configuration:\n")
@@ -41,8 +43,9 @@ def generateLog(config, result, save=None):
         
         output.write("\n\n")
         output.write("Experiments Result:\n")
-        for var in result:
-            output.write("{} = {}\n".format(retrieve_name_ex(var),var))
+        if not result is None:
+            for var in result:
+                output.write("{} = {}\n".format(retrieve_name_ex(var),var))
             
         output.write("\n\n")
         output.write("Saved Data:\n")
@@ -55,6 +58,8 @@ def generateLog(config, result, save=None):
         with open(os.path.join("log", filename + ".data"), "wb") as f: 
             pickle.dump(save, f)
         
+        print(filename)
+        
     
     
     
@@ -62,4 +67,5 @@ if __name__ == "__main__":
     a = 10
     outputVar(a)
     
-    print(__file__)
+    print(getFileName())
+    
