@@ -1,6 +1,7 @@
 import sys
 import os
 import datetime
+import time
 import pickle
 
 # 避免在代码中 hardcode 参数信息，所有参数写在单独的一块；
@@ -8,6 +9,23 @@ import pickle
 #   以及该次实验的configuration，主文件名称路径，
 # 给每次实验取一个独特的id （时间+文件名）， 所有实验结果保存在该id的目录下。
 # 提前准备好要保存的数据于save变量中
+
+
+
+def get_time_output(f):
+
+    def inner(*arg,**kwarg):
+        s_time = time.clock()
+        res = f(*arg,**kwarg)
+        e_time = time.clock()
+        duration = e_time - s_time
+        
+        print('This function takes {} sec(s).'.format(e_time - s_time))
+        return duration
+        
+    return inner
+
+
 
 def getFileName():
     return os.path.split(sys._getframe(1).f_code.co_filename)[-1]

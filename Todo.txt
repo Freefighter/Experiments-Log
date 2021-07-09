@@ -1,0 +1,15 @@
+函数时间记录功能
+
+#--------------------------------
+import time
+from functools import wraps  
+def fun_timer(function):
+    @wraps(function)
+    def function_timer(*args, **kwargs):
+        t0 = time.time()
+        result = function(*args, **kwargs)
+        t1 = time.time()
+        os.system(" echo Total time running %s: %s seconds" % (function.func_name, str(t1-t0)) + " >> timecount.log")
+        return result
+    return function_timer
+#-----------------------------------
