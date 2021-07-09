@@ -25,11 +25,6 @@ def get_time_output(f):
         
     return inner
 
-
-
-def getFileName():
-    return os.path.split(sys._getframe(1).f_code.co_filename)[-1]
-
 def retrieve_name_ex(var):
     frame = sys._getframe(2)    
     while(frame):        
@@ -50,11 +45,17 @@ def generateLog(config, result=None, save=None):
     if not os.path.exists("log"):
         os.makedirs("log")
     
-    rawname = os.path.split(sys._getframe(1).f_code.co_filename)[-1]
+    # path = os.path.split(getFilePath())
+    path = sys._getframe(1).f_code.co_filename
+    # path = "Fuck"
+    print(path)
+    rawname = os.path.split(path)[-1]
     filename = "{}_{}".format(rawname, str(datetime.datetime.now())
         ).replace(' ', '_').replace(':', '.')
-        
-    with open(os.path.join("log", filename + ".txt"), "w") as output:
+    
+    with open(path, "r", encoding="utf-8") as source: text = source.read()
+    
+    with open(os.path.join("log", filename + ".txt"), "w", encoding="utf-8") as output:
         output.write("Configuration:\n")
         for var in config:
             output.write("{} = {}\n".format(retrieve_name_ex(var),var))
@@ -71,6 +72,10 @@ def generateLog(config, result=None, save=None):
             for var in save:
                 output.write("{}\n".format(retrieve_name_ex(var)))
         
+        output.write("\n\n")
+        output.write("Source Code:\n")
+        output.write("{}\n".format(text))
+        
     # print(filename)
     if not save is None:
         with open(os.path.join("log", filename + ".data"), "wb") as f: 
@@ -85,5 +90,5 @@ if __name__ == "__main__":
     a = 10
     outputVar(a)
     
-    print(getFileName())
+    # print(getFilePath())
     

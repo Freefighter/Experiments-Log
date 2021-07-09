@@ -1,4 +1,17 @@
-import explog
+Configuration:
+a = 102
+
+
+Experiments Result:
+b = 666
+
+
+Saved Data:
+c
+
+
+Source Code:
+﻿import explog
 import time
 
 a = 102
