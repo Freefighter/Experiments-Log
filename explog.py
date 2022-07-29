@@ -15,13 +15,13 @@ import pickle
 def get_time_output(f):
 
     def inner(*arg,**kwarg):
-        s_time = time.clock()
+        s_time = time.time()
         res = f(*arg,**kwarg)
-        e_time = time.clock()
+        e_time = time.time()
         duration = e_time - s_time
         
         print('This function takes {} sec(s).'.format(e_time - s_time))
-        return duration
+        return res, duration
         
     return inner
 
