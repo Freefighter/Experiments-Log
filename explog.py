@@ -10,8 +10,6 @@ import pickle
 # 给每次实验取一个独特的id （时间+文件名）， 所有实验结果保存在该id的目录下。
 # 提前准备好要保存的数据于save变量中
 
-
-
 def get_time_output(f):
 
     def inner(*arg,**kwarg):
@@ -82,13 +80,48 @@ def generateLog(config, result=None, save=None):
             pickle.dump(save, f)
         
         print(filename)
-        
-    
-    
+
+# import io, tokenize, re
+# from https://stackoverflow.com/a/62074206
+
+import io, tokenize
+
+def remove_comments_and_docstrings(source):
+    io_obj = io.StringIO(source)
+    out = ""
+    prev_toktype = tokenize.INDENT
+    last_lineno = -1
+    last_col = 0
+    for tok in tokenize.generate_tokens(io_obj.readline):
+        token_type = tok[0]
+        token_string = tok[1]
+        start_line, start_col = tok[2]
+        end_line, end_col = tok[3]
+        # ltext = tok[4]
+        if start_line > last_lineno:
+            last_col = 0
+        if start_col > last_col:
+            out += (" " * (start_col - last_col))
+        if token_type == tokenize.COMMENT:
+            pass
+        elif token_type == tokenize.STRING:
+            if prev_toktype != tokenize.INDENT:
+                if prev_toktype != tokenize.NEWLINE:
+                    if start_col > 0:
+                        out += token_string
+        else:
+            out += token_string
+        prev_toktype = token_type
+        last_col = end_col
+        last_lineno = end_line
+    out = '\n'.join(l for l in out.splitlines() if l.strip())
+    return out
     
 if __name__ == "__main__":
-    a = 10
-    outputVar(a)
+    # a = 10
+    # outputVar(a)
     
     # print(getFilePath())
     
+    with open('test_call.py', 'r', encoding='UTF-8') as f:
+        print(remove_comments_and_docstrings(f.read()))
