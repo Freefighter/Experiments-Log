@@ -116,7 +116,28 @@ def remove_comments_and_docstrings(source):
         last_lineno = end_line
     out = '\n'.join(l for l in out.splitlines() if l.strip())
     return out
-    
+
+def save_to(obj, filename):
+    with open(filename, "wb") as f: 
+        pickle.dump(obj, f)
+
+def read_from(filename):
+    with open(filename, "rb") as f: 
+        out = pickle.load(f)
+    return out
+
+import random
+import numpy as np
+import torch
+
+def set_all_seeds(seed):
+  random.seed(seed)
+  os.environ['PYTHONHASHSEED'] = str(seed)
+  np.random.seed(seed)
+  torch.manual_seed(seed)
+  torch.cuda.manual_seed(seed)
+  torch.backends.cudnn.deterministic = True
+
 if __name__ == "__main__":
     # a = 10
     # outputVar(a)
